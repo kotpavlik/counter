@@ -1,0 +1,17 @@
+.wrapper_counter {
+    display:block;
+    width:15%;
+    margin:20px auto;
+    text-align:center;
+    border: 1px solid #818181;
+    padding: 20px;
+    background-color: rgba(152, 152, 152, 0.29);
+    border-radius: 10px;
+    box-shadow: -5px 5px 5px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s;
+}
+.wrapper_counter:hover{
+    box-shadow: -10px 10px 10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+    transition: all 0.5s;
+}
