@@ -4,8 +4,11 @@ import Button from '../boutton/Button';
 
 type CounterPropsType = {
     count: number;
+    maxValue: number | number[]
+    startValue: number | number[]
     setCount: (count: number) => void;
     setSettings: (settings: boolean) => void;
+    updateStartValue:() => void;
 }
 
 const Counter = (props: CounterPropsType) => {
@@ -13,20 +16,21 @@ const Counter = (props: CounterPropsType) => {
 
 
     const onClickHandlerInc = () => {
-        props.count !== 5 ? props.setCount(props.count + 1) : props.setCount(5);
+        props.count !== props.maxValue ? props.setCount(props.count + 1) : props.setCount(props.maxValue);
     }
     const onClickHandlerReset = () => {
-        props.setCount(0)
+        props.updateStartValue()
     }
     const onClickHandlerSet = () => {
         props.setSettings(false)
     }
-    const styleMoreOrLessFive = props.count >= 5 ? style.moreFive : style.lessFive;
+    const styleMoreOrLessFive = props.count >= props.maxValue ? style.moreFive : style.lessFive;
+
     return (
         <div className={style.counter}>
             <div className={styleMoreOrLessFive}>{props.count}</div>
             <div className={style.buttons_wrapper}>
-                <Button ButtonName={props.count} count={props.count} onClickHandler={() => {
+                <Button ButtonName={props.count} disabled={props.count !== props.maxValue ? false: true} onClickHandler={() => {
                     onClickHandlerInc()
                 }}/>
                 <Button

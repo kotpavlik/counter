@@ -4,7 +4,7 @@ import style from './Button.module.css';
 type ButtonPropsType = {
     ButtonName: number | string
     onClickHandler: () => void
-    count?: number
+    disabled?:boolean
 
 }
 
@@ -13,7 +13,7 @@ const Button = (props: ButtonPropsType) => {
     return (
         <div className={style.button_wrapper}>
             <button onClick={props.onClickHandler}
-                    disabled={props.count !== 5 ? false: true}
+                    disabled={props.disabled}
                     className={style.button}>
                 {props.ButtonName}
             </button>
