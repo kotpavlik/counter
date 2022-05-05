@@ -11,7 +11,7 @@ function App() {
             let newValueString = localStorage.getItem('counterValue');
             if (newValueString) {
                 let newCount = JSON.parse(newValueString);
-                return newCount || startValue;
+                return newCount || 0;
             }
         });
     const [maxValue, setMaxValue] = useState<number | number[]>(() => {
