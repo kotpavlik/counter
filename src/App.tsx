@@ -2,32 +2,64 @@ import React, {useEffect, useState} from 'react';
 import style from './App.module.css';
 import Counter from './component/counter/Counter';
 import {RangeCount} from './component/range_count/RangeCount';
+import {useSelector} from 'react-redux';
+import {AppStateType} from './store/store';
 
 
 function App() {
 
-    const [count, setCount] = useState(
-        () => {
-            let newValueString = localStorage.getItem('counterValue');
-            if (newValueString) {
-                let newCount = JSON.parse(newValueString);
-                return newCount || 0;
-            }
-        });
-    const [maxValue, setMaxValue] = useState<number | number[]>(() => {
-        let newValueString = localStorage.getItem('max_value');
+    const count = useSelector<AppStateType, number>(state => state.count_value.count)
+    const startValue = useSelector<AppStateType, number | number[]>(state => state.start_value.startValue)
+    const maxValue = useSelector<AppStateType, number | number[]>(state => state.max_value.maxValue)
+
+    const countLocalStorage = () => {
+        let newValueString = localStorage.getItem('counterValue');
         if (newValueString) {
-            let newMaxValue = JSON.parse(newValueString);
-            return newMaxValue || startValue;
+            let newCount = JSON.parse(newValueString);
+            return newCount
         }
-    });
-    const [startValue, setStartValue] = useState<number | number[]>(() => {
+    }
+
+
+    const startValueLocalStorage = () => {
         let newValueString = localStorage.getItem('start_value');
         if (newValueString) {
             let newStartValue = JSON.parse(newValueString);
-            return newStartValue || startValue;
+            return newStartValue
         }
-    });
+    }
+
+    const maxValueLocalStorage = () => {
+        let newValueString = localStorage.getItem('max_value');
+        if (newValueString) {
+            let newMaxValue = JSON.parse(newValueString);
+            return newMaxValue
+        }
+    }
+
+
+    // const [count, setCount] = useState(
+    //     () => {
+    //         let newValueString = localStorage.getItem('counterValue');
+    //         if (newValueString) {
+    //             let newCount = JSON.parse(newValueString);
+    //             return newCount || 0;
+    //         }
+    //     });
+    // const [maxValue, setMaxValue] = useState<number | number[]>(() => {
+    //     let newValueString = localStorage.getItem('max_value');
+    //     if (newValueString) {
+    //         let newMaxValue = JSON.parse(newValueString);
+    //         return newMaxValue || startValue;
+    //     }
+    // });
+    // const [startValue, setStartValue] = useState<number | number[]>(() => {
+    //     let newValueString = localStorage.getItem('start_value');
+    //     if (newValueString) {
+    //         let newStartValue = JSON.parse(newValueString);
+    //         return newStartValue || startValue;
+    //     }
+    // });
     const [settings, setSettings] = useState<boolean>(true)
 
     useEffect(() => {
@@ -40,10 +72,6 @@ function App() {
         localStorage.setItem('counterValue', JSON.stringify(count))
     }, [count])
 
-    const updateStartValue = () => {
-        setCount(startValue)
-    }
-
 
     return (
         <div className={style.wrapper_counter}>
@@ -53,24 +81,15 @@ function App() {
                 <>
                     <div className={style.count_wrapper}><h1> counter</h1></div>
                     <Counter
-                        count={count}
-                        maxValue={maxValue}
-                        startValue={startValue}
-                        setCount={setCount}
                         setSettings={setSettings}
-                        updateStartValue={updateStartValue}/>
+                    />
 
                 </>
                 :
                 <>
                     <div className={style.count_wrapper}><h1> settings</h1></div>
                     <RangeCount
-                        maxValue={maxValue}
-                        startValue={startValue}
-                        setStartValue={setStartValue}
-                        setMaxValue={setMaxValue}
                         setSettings={setSettings}
-                        updateStartValue={updateStartValue}
                     />
                 </>
             }

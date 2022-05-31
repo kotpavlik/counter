@@ -1,42 +1,45 @@
 import style from './Counter.module.css';
 import Button from '../boutton/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import { setCountValueAC} from '../../store/reducers/count_reducer';
+
+import {AppStateType} from '../../store/store';
 
 
 type CounterPropsType = {
-    count: number;
-    maxValue: number | number[]
-    startValue: number | number[]
-    setCount: (count: number) => void;
     setSettings: (settings: boolean) => void;
-    updateStartValue:() => void;
 }
 
 const Counter = (props: CounterPropsType) => {
 
+    const dispatch = useDispatch()
+    const count = useSelector<AppStateType,number >(state => state.count_value.count)
+    const startValue = useSelector<AppStateType,number | number[]>(state => state.start_value.startValue)
+    const maxValue = useSelector<AppStateType,number | number[]>(state => state.max_value.maxValue)
 
 
     const onClickHandlerInc = () => {
-        props.count !== props.maxValue ? props.setCount(props.count + 1) : props.setCount(props.maxValue);
+        count !== maxValue ? dispatch(setCountValueAC(count + 1)) : dispatch(setCountValueAC(maxValue));
     }
-    const onClickHandlerReset = () => {
-        props.updateStartValue()
+    const onClickHandlerReset = (startValue:number | number[]) => {
+        dispatch(setCountValueAC(Number(startValue)))
     }
     const onClickHandlerSet = () => {
         props.setSettings(false)
     }
-    const styleMoreOrLessFive = props.count >= props.maxValue ? style.moreFive : style.lessFive;
+    const styleMoreOrLessFive = count >= maxValue ? style.moreFive : style.lessFive;
 
     return (
         <div className={style.counter}>
-            <div className={styleMoreOrLessFive}>{props.count}</div>
+            <div className={styleMoreOrLessFive}>{count}</div>
             <div className={style.buttons_wrapper}>
-                <Button ButtonName={props.count} disabled={props.count !== props.maxValue ? false: true} onClickHandler={() => {
+                <Button ButtonName={count} disabled={count !== maxValue ? false: true} onClickHandler={() => {
                     onClickHandlerInc()
                 }}/>
                 <Button
                     ButtonName={'RES'}
                     onClickHandler={() => {
-                        onClickHandlerReset()
+                        onClickHandlerReset(startValue)
                     }}/>
                 <Button
                     ButtonName={'SET'}

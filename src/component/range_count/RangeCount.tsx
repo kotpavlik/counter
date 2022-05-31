@@ -2,45 +2,48 @@ import React, {FC, useState} from 'react';
 import style from './RangeCount.module.css'
 import {Slider} from '@mui/material';
 import Button from '../boutton/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import { setMaxValueAC} from '../../store/reducers/max_value_reducer';
+import {setStartValueAC} from '../../store/reducers/start_value_reducer';
+import {AppStateType} from '../../store/store';
+import {setCountValueAC} from '../../store/reducers/count_reducer';
 
 
 type RangeCountPropsType = {
-    maxValue: number | number[]
-    startValue: number | number[]
-    setStartValue: (startValue: number | number[]) => void
-    setMaxValue: (maxValue: number | number[]) => void
     setSettings: (settings: boolean) => void;
-    updateStartValue: () => void;
 }
 
 
 export const RangeCount: FC<RangeCountPropsType> = (props) => {
 
+    const dispatch = useDispatch()
+    const maxValue = useSelector<AppStateType,number | number[]>(state => state.max_value.maxValue)
+    const startValue = useSelector<AppStateType,number | number[]>(state => state.start_value.startValue)
 
     const [error, setError] = useState(false)
 
     const startValueChangeHandler = (event: Event, value: number | number[], activeThumb: number) => {
-        if (value >= props.maxValue) {
-            props.setStartValue(value)
+        if (value >= maxValue) {
+            dispatch(setStartValueAC(value))
             setError(true)
         } else {
             setError(false)
-            props.setStartValue(value)
+            dispatch(setStartValueAC(value))
         }
     }
     const maxValueChangeHandler = (event: Event, value: number | number[], activeThumb: number) => {
-        if (props.startValue >= value) {
-            props.setMaxValue(value)
+        if (startValue >= value) {
+            dispatch(setMaxValueAC(value))
             setError(true)
         } else {
             setError(false)
-            props.setMaxValue(value)
+            dispatch(setMaxValueAC(value))
 
         }
     }
-    const onClickHandlerBack = () => {
+    const onClickHandlerBack = (startValue:number| number[]) => {
         props.setSettings(true)
-        props.updateStartValue()
+        dispatch(setCountValueAC(Number(startValue)))
     }
 
 
@@ -54,7 +57,7 @@ export const RangeCount: FC<RangeCountPropsType> = (props) => {
                 <Slider
                     onChange={startValueChangeHandler}
                     size="small"
-                    defaultValue={props.startValue}
+                    defaultValue={startValue}
                     aria-label="Small"
                     valueLabelDisplay="auto"
                 />
@@ -62,7 +65,7 @@ export const RangeCount: FC<RangeCountPropsType> = (props) => {
                 <Slider
                     onChange={maxValueChangeHandler}
                     size="small"
-                    defaultValue={props.maxValue}
+                    defaultValue={maxValue}
                     aria-label="Small"
                     valueLabelDisplay="auto"
                 />
@@ -71,7 +74,7 @@ export const RangeCount: FC<RangeCountPropsType> = (props) => {
                         disabled={error}
                         ButtonName={'back'}
                         onClickHandler={() => {
-                            onClickHandlerBack()
+                            onClickHandlerBack(startValue)
                         }}/>
                 </div>
             </div>
